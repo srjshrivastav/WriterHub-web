@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, withRouter } from "react-router-dom";
+import {  withRouter,useHistory } from "react-router-dom";
 import { createAuthor } from "../utils/api";
 import { connect } from "react-redux";
 
@@ -10,9 +10,17 @@ function AuthorForm(props) {
     phone: "",
     dob: "",
   };
+  const history = useHistory();
   const [authDetails, setAuthDetails] = useState(state);
 
-  const handleSubit = () => createAuthor(props.dispatch, authDetails);
+  const handleSubmit =  () =>{
+
+    createAuthor(props.dispatch, authDetails)
+    .then((result)=>{
+      if(result)
+      history.push("/myArticles")
+    })
+  } 
 
   return (
     <div className="container d-flex justify-content-center">
@@ -61,7 +69,7 @@ function AuthorForm(props) {
               setAuthDetails({ ...authDetails, phone: target.value })
             }
           />
-          <button className="btn btn-outline-dark mt-3" onClick={handleSubit}>
+          <button className="btn btn-outline-dark mt-3" onClick={handleSubmit}>
             Submit
           </button>
         </div>

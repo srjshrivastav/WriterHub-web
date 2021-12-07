@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { unsetAuthedUser } from "../actions/authUsers";
+import Alert from "./Alert";
 class NavBar extends React.Component {
   logout = () => {
     this.props.dispatch(unsetAuthedUser());
@@ -9,6 +10,7 @@ class NavBar extends React.Component {
 
   render() {
     const { isAuthenticated, user } = this.props.authedUser;
+    const {alertMessage} = this.props
     return (
       <div>
         <nav className="navbar navbar-expand-lg bg-dark static-top ">
@@ -112,13 +114,15 @@ class NavBar extends React.Component {
             </div>
           </div>
         </nav>
+        {alertMessage && <Alert />}
       </div>
     );
   }
 }
-function mapStateToProps({ authedUser }) {
+function mapStateToProps({ authedUser,alertMessage }) {
   return {
     authedUser,
+    alertMessage
   };
 }
 export default connect(mapStateToProps)(NavBar);

@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { startLoading, stopLoading } from "../actions/loading";
 import { loadArticles } from "../utils/api";
-import { addArticle } from "../actions/articles";
 import ArticleCard from "./ArticleCard";
 import Loading from "./Loading";
 import NoArticlepage from "./NoArticlePage";
@@ -29,8 +28,8 @@ class UserHome extends React.Component {
     }
     return (
       <div className="container">
-        {Object.values(articles).map((article)=>
-           <ArticleCard article={article} />
+        {articles.map((article,index)=>
+           <ArticleCard article={article} key={index} />
         )}
       </div>
     );
@@ -39,7 +38,7 @@ class UserHome extends React.Component {
 
 function mapStateToProps({ articles, loading }) {
   return {
-    articles,
+    articles:Object.values(articles),
     loading,
     isAuthor: true,
   };

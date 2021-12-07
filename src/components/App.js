@@ -1,26 +1,25 @@
 import React from "react";
 import "../App.css";
 import { connect } from "react-redux";
-import { Route, withRouter, Switch, Redirect } from "react-router-dom";
+import { Route, withRouter, Switch } from "react-router-dom";
 import UserHome from "./UserHome";
 import NotFound from "./NotFound";
-import Alert from "./Alert";
 import NavBar from "./NavBar";
 import AuthPage from "./AuthPage";
 import AuthorForm from "./AuthorForm";
 import NewArticle from "./NewArticle";
 import Loading from "./Loading";
 import ArticleByAuthor from "./ArticleByAuthor";
+import ArticleView from './ArticleView'
+
 class App extends React.Component {
 
   render() {
     const { isAuthenticated } = this.props.authedUser;
-    const { alertMessage, loading } = this.props;
-    console.log(isAuthenticated,loading)
+    const { loading } = this.props;
     return (
       <div>
         <NavBar />
-        {alertMessage && <Alert />}
         {loading ? (
           <Loading />
         ) : (
@@ -31,6 +30,17 @@ class App extends React.Component {
               render={() =>
                 isAuthenticated ? (
                   <UserHome />
+                ) : (
+                  <AuthPage />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/article/:articleId"
+              render={() =>
+                isAuthenticated ? (
+                  <ArticleView />
                 ) : (
                   <AuthPage />
                 )

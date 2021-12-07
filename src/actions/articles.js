@@ -17,3 +17,16 @@ export function deleteArticle(articleId) {
     articleId
   };
 }
+
+export function setCurrentArticle(article) {
+  return {
+    type: SET_CURRENT_ARTICLE,
+    article,
+  };
+}
+
+export function removeCurrentArticles() {
+  return {
+    type: REMOVE_CURRENT_ARTICLE
+}
+}

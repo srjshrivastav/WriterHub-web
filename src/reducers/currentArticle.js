@@ -6,7 +6,8 @@ import {
 let intialState={
   title:"",
   content:"",
-  company:null
+  company:null,
+  author:null
 }
 
 export default function currentArticle(state = intialState, action) {

@@ -1,8 +1,7 @@
 import {HOST,POST} from '../config/serverConfig'
 import {setAuthedUser, setAuthor} from '../actions/authUsers'
 import { setMessge } from '../actions/apiErrorAlert';
-import { startLoading, stopLoading } from '../actions/loading';
-import { addArticle } from '../actions/articles';
+import { addArticle, setCurrentArticle } from '../actions/articles';
 
 const baseUrl  = HOST+":"+POST
 
@@ -37,10 +36,10 @@ export function login(credentials,dispatch) {
       return true
     }
     else if(response.status === 401){
-
+      dispatch(setMessge("Incorrect Credentials","ERROR"))
     }
     else{
-
+      dispatch(setMessge("Something went wrong..!","ERROR"))
     }
   })
 }
@@ -85,9 +84,29 @@ export function loadArticles(dispatch) {
   })
 }
 
-export function createAuthor(dispatch,author) {
+export async function loadArticle(dispatch,articleId) {
+
   const access_token = window.localStorage.getItem("writerHub_access_token");
-  fetch(baseUrl+"/api/author",{
+  return fetch(baseUrl+"/api/article/"+articleId,{
+    method:"GET",
+    headers:{
+      "Authorization":"Bearer "+access_token
+    }
+  })
+  .then(async (response)=>{
+    const body = await response.json();
+    if(response.status === 200){
+      dispatch(setCurrentArticle(body));
+    }
+    else{
+      dispatch(setMessge(body.message,"ERROR"))
+    }
+  })
+}
+
+export async function createAuthor(dispatch,author) {
+  const access_token = window.localStorage.getItem("writerHub_access_token");
+  return fetch(baseUrl+"/api/author",{
     method:"POST",
     headers:{
       "Authorization":"Bearer "+access_token,
@@ -99,9 +118,11 @@ export function createAuthor(dispatch,author) {
     const body = await response.json();
     if(response.status === 201){
       dispatch(setAuthor(body));
+      return true;
     }
     else{
       dispatch(setMessge(body.message,"ERROR"))
+      return false;
     }
   })
 }
@@ -118,6 +139,7 @@ export function postArticle(dispatch,article,authorId,history) {
     body:JSON.stringify(article)
   })
   .then(async (response)=>{
+    console.log(response,article)
     const body = await response.json();
     if(response.status === 201){
       dispatch(addArticle([body]));
@@ -125,6 +147,24 @@ export function postArticle(dispatch,article,authorId,history) {
     }
     else{
       dispatch(setMessge(body.message,"ERROR"))
+    }
+  })
+}
+
+export async function deleteArticle(articleId,authorId) {
+  const access_token = window.localStorage.getItem("writerHub_access_token");
+  return fetch(baseUrl+"/api/author/"+authorId+"/article/"+articleId,{
+    method:"DELETE",
+    headers:{
+      "Authorization":"Bearer "+access_token
+    }
+  })
+  .then(async (response)=>{
+    if(response.status === 200){
+      return true;
+    }
+    else{
+      return false;
     }
   })
 }

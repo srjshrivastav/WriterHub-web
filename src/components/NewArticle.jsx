@@ -5,9 +5,9 @@ import {postArticle} from '../utils/api'
 
 function NewArticle(props) {
   let initialState = {
-    title: props.article.title,
-    content: props.article.content,
-    company:props.article.company
+    title: props.url==='/newArticle'?"":props.article.title,
+    content: props.url==='/newArticle'?"":props.article.content,
+    company: props.url==='/newArticle'?null:props.article.company
   };
   const history = useHistory();
   const [state, setState] = useState(initialState);
@@ -42,10 +42,11 @@ function NewArticle(props) {
   );
 }
 
-function mapStateToProps({currentArticle,authedUser}){
+function mapStateToProps({currentArticle,authedUser},{match}){
 return{
     article:currentArticle,
-    user:authedUser.user
+    user:authedUser.user,
+    url:match.url
 }
 }
 
